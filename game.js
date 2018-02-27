@@ -15,6 +15,10 @@ const Colors = {
 let scene,camera,fieldOfView, aspectRatio, nearPlane, farPlane, HEIGHT, WIDTH,renderer, container
 let hemisphereLight, shadowLight
 let sea,sky,airplane,Sea,Sky,Cloud,AirPlane
+let touchePos={
+    x:0,
+    y:0
+}
 
 // wx.getSystemInfo({
 //     success(info){
@@ -39,6 +43,8 @@ function init(){
 
     createSky()
 
+    wx.onTouchMove(handleTouchMove)
+
     loop()
 }
 
@@ -57,10 +63,10 @@ function createScene(){
         farPlane
     )
 
-    camera.position.x=-50
-    camera.position.y=150
+    camera.position.x=0
+    camera.position.y=100
     camera.position.z=200
-    camera.lookAt(new THREE.Vector3(0,90,0))
+    //camera.lookAt(new THREE.Vector3(0,90,0))
 
 
     renderer=new THREE.WebGLRenderer({
@@ -248,14 +254,42 @@ function createPlane(){
 }
 
 function loop() {
-    airplane.propeller.rotation.x+=0.3
+    //airplane.propeller.rotation.x+=0.3
     sea.mesh.rotation.z+=0.005
     sky.mesh.rotation.z+=0.01
 
-    //updatePlane()
+    updatePlane()
 
     renderer.render(scene,camera)
     requestAnimationFrame(loop)
 }
+
+function handleTouchMove(event){
+    let tx=-1+(event.changedTouches[0].clientX/WIDTH)*2
+    let ty=1-(event.changedTouches[0].clientY/HEIGHT)*2
+    touchePos={
+        x:tx,
+        y:ty
+    }
+}
+
+function updatePlane(){
+    let targetX = normalize(touchePos.x, -1, 1, -100, 100);
+    let targetY = normalize(touchePos.y, -1, 1, 25, 175);
+
+    airplane.mesh.position.y = targetY;
+    airplane.mesh.position.x = targetX;
+    airplane.propeller.rotation.x += 0.3;
+}
+
+function normalize(v,vmin,vmax,tmin,tmax){
+    let nv=Math.max(Math.min(v,vmax),vmin)
+    let dv=vmax-vmin
+    let pc=(nv-vmin)/dv
+    let dt=tmax-tmin
+    let tv=tmin+(pc*dt)
+    return tv
+}
+
 
 init()

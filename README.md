@@ -1,3 +1,6 @@
+##小飞机-微信小游戏版
+[](./wiki/airPlane.jpeg)
+
 ## quickstart
 
 ## 源码目录介绍
