@@ -1,5 +1,5 @@
 ##小飞机-微信小游戏版
-[](./wiki/airPlane.jpeg)
+[]('./wiki/airPlane.jpeg')
 
 ## quickstart
 
